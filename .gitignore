@@ -1,0 +1,11 @@
+.vs
+packages
+TestResults
+DsAndAlg.sln
+DsAndAlg.test
+*/bin
+*/obj
+*/Properties
+*/*.csproj
+*/*.csproj.user
+*/App.config
