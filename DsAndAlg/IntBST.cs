@@ -161,7 +161,7 @@ public class IntBST
 
     /// <summary>
     /// 1. 如果是叶子:直接删除
-    /// 2. 如果只有一个节点
+    /// 2. 如果只有一个节点,可以理解为链表删除
     /// 3. 如果有两个子节点
     /// </summary>
     /// <param name="ele"></param>
