@@ -43,7 +43,6 @@ public class SimpleIntervalTree
 
         if (node.Mid < point)
         {
-
             foreach(var item in node.Hit)
             {
                 if (item.Y >= point)

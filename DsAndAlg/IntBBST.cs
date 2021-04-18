@@ -85,6 +85,17 @@ public class IntBBST
         return node;
     }
 
+
+
+    /// <summary>
+    ///      A                 B 
+    ///     / \              /   \
+    ///    B   X --->       C    A
+    ///   / \              /     /\
+    ///  C   Y            N    Y  X
+    /// N
+    /// <param name="parent">A</param>
+    /// <returns></returns>
     private IntBBSTNode LeftLeft_Rotation(IntBBSTNode parent)
     {
         IntBBSTNode temp;
@@ -109,6 +120,16 @@ public class IntBBST
         return RightRight_Rotation(parent);
     }
 
+    /// <summary>
+    ///      A                 B 
+    ///     / \              /   \
+    ///    X   B --->       A     C
+    ///       /  \         / \     \
+    ///      Y    C       X   Y     N
+    ///             N
+    /// </summary>
+    /// <param name="parent">A</param>
+    /// <returns></returns>
     private IntBBSTNode RightRight_Rotation(IntBBSTNode parent)
     {
         IntBBSTNode temp;

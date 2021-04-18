@@ -1,25 +1,27 @@
 using System;
 using System.Collections.Generic;
+using IntBSTNode = BSTNode<int>;
 
-public class IntBSTNode
+public class BSTNode<T>:IBNode<BSTNode<T>> where T:IComparable<T>
 {
     public int key {get; set;}
-    public IntBSTNode left{get; set;}
-    public IntBSTNode right{get; set;}
-    public IntBSTNode()
+    public BSTNode<T> left{get; set;}
+    public BSTNode<T> right{get; set;}
+    public BSTNode()
     {
         this.left = this.right = null;
     }
 
-    public IntBSTNode(int ele):this(ele,null,null)
+    public BSTNode(int ele):this(ele,null,null)
     {
         
     }
 
-    public IntBSTNode(int ele,IntBSTNode left,IntBSTNode right){
+    public BSTNode(int ele, BSTNode<T> left, BSTNode<T> right){
         this.key = ele;this.left = left;this.right = right;
     }
 }
+
 
 public class IntBST
 {
@@ -33,7 +35,14 @@ public class IntBST
         System.Console.WriteLine(p.key);
     }
 
-    public IntBSTNode Search(IntBSTNode p,int ele)
+    public bool Has(int ele)
+    {
+        if (root == null)
+            return false;
+        return Search(root, ele) != null;
+    }
+
+    private IntBSTNode Search(IntBSTNode p,int ele)
     {
         while(p!=null){
             if(ele == p.key){
@@ -217,6 +226,66 @@ public class IntBST
         {
             Console.WriteLine("Do Not Find");
         }
+    }
+
+    public void deleteByCopy(int ele)
+    {
+        if (root == null)
+            return;
+        
+        IntBSTNode prev = null,node= root, p =  root;
+        while (p != null && p.key!=ele)
+        {
+            prev = p;
+            if (p.key > ele)
+            {
+                p = p.left;
+            }
+            else
+            {
+                p = p.right;
+            }
+        }
+        node = p;
+
+        if(p!=null && p.key == ele)
+        {
+            if (node.right == null)
+            {
+                node = node.left;
+            }else if (node.left == null)
+            {
+                node = node.right;
+            }
+            else
+            {
+                var tmp = node.left;
+                var previous = node;
+                while (tmp.right != null)
+                {
+                    previous = tmp;
+                    tmp = tmp.right;
+                }
+                node.key = tmp.key;
+
+                if (previous == node)
+                {
+                    previous.left = tmp.left;
+                }
+                else
+                    previous.right = tmp.left;
+            }
+        }
+        if (p == root)
+        {
+            root = node;
+        }
+        else if (prev.left == p)
+        {
+            prev.left = node;
+        }
+        else
+            prev.right = node;
     }
 
     public IntBST(int[] data)
