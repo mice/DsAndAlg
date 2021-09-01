@@ -10,7 +10,7 @@ public class IntervalTree<TKey> where TKey : IComparable<TKey>
     public class IntervalBSTNode<T> :IBNode<IntervalBSTNode<T>>
     {
         public T key { get; set; }
-        public T end { get;private set ; }
+        public T end { get; set ; }
         public T max { get; set; }
 
         public IntervalBSTNode<T> left { get; set; }
@@ -36,9 +36,90 @@ public class IntervalTree<TKey> where TKey : IComparable<TKey>
 
     public void Remove(TKey value)
     {
+        if (root_ == null)
+            return;
+        Stack<IntervalBSTNode<TKey>> nodeStack = new Stack<IntervalBSTNode<TKey>>();
+        IntervalBSTNode<TKey> p = root_,prev= null;
+        while(p != null && p.key.CompareTo(value)==0)
+        {
+            var cmp = p.key.CompareTo(value);
+            prev = p;
+            nodeStack.Push(p);
+            if (cmp > 0)
+            {
+                p = p.left;
+            }
+            else if (cmp < 0)
+            {
+                p = p.right;
+            }
+        }
+        var node = p;
+        if(p!=null && p.key.CompareTo(value)==0)
+        {
+            if (node.left == null)//如果左子树为null,用右子树替换当前节点
+            {
+                node = node.right;
+            }else if(node.right == null)//如果右子树为null;用左子树替换当前节点.
+            {
+                node = node.left;
+            }else
+            {
+                var tmpNode = node.left;//寻找左子树最大的点.,也可以用右子树最小的点.
+                var previous = node;
+                while (tmpNode != null)
+                {
+                    nodeStack.Push(tmpNode);
+                    previous = tmpNode;
+                    tmpNode = tmpNode.right;
+                }
+                node.key = tmpNode.key;//把node的值替换为当前的值.
+                node.end = tmpNode.end;
+                if (previous == node)//相当于左子树没有右边节点,
+                {
+                    previous.left = tmpNode.left;
+                    if (tmpNode.left!=null && previous.end.CompareTo(tmpNode.left.max) < 0)
+                    {
+                        previous.max = tmpNode.left.max;
+                    }
+                   
+                }
+                else
+                {
+                    previous.right = tmpNode.left;
+                    if (tmpNode.left != null && previous.end.CompareTo(tmpNode.left.max) < 0)
+                    {
+                        previous.max = tmpNode.left.max;
+                    }
+                }
+            }
+
+
+            var prevNode = node;
+            while (nodeStack.Count > 0)
+            {
+                var tmpNode = nodeStack.Pop();
+                var cmp = tmpNode.end.CompareTo(prevNode.end);
+                if (cmp < 0)
+                {
+                    tmpNode.end = prevNode.end;
+                }
+                prevNode = tmpNode;
+            }
+        }
+
+        if (p == root_)
+        {
+            root_ = node;
+        }
+        else if (prev.left == p)
+        {
+            prev.left = node;
+        }
+        else
+            prev.right = node;
 
     }
-
 
     public void Insert(TKey value,TKey end)
     {

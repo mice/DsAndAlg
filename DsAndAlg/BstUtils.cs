@@ -4,6 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntBSTNode = BSTNode<int>;
+
+public interface IFormat<T>
+{
+    void Format(T t);
+}
+
 public interface IBNode<T>
 {
     T left { get; set; }
@@ -15,6 +21,58 @@ namespace DsAndAlg
 
     public static class BstUtils
     {
+        public static int BinarySearch<T>(List<T> sources,T target) where T:IComparable<T>
+        {
+            return __BinarySearch(sources, Comparer<T>.Default, target, 0, sources.Count-1);
+        }
+
+        public static int BinarySearch<T>(List<T> sources,System.Func<T,int> compare)
+        {
+            return __BinarySearch(sources, compare, 0, sources.Count - 1);
+        }
+
+        private static int __BinarySearch<T>(List<T> sources, System.Func<T, int> compare, int start, int end)
+        {
+            while (start <= end)
+            {
+                var medIndex = start + (end - start) / 2;
+                var med = sources[medIndex];
+                var compValue = compare.Invoke(med);
+                if (compValue < 0)
+                {
+                    end = medIndex - 1;
+                }
+                else if (compValue > 0)
+                {
+                    start = medIndex + 1;
+                }
+                else
+                    return medIndex;
+            }
+            return start;
+        }
+
+        private static int __BinarySearch<T>(List<T> sources, IComparer<T> compare, T target, int start, int end)
+        {
+            while (start <= end)
+            {
+                var medIndex = start + (end - start) / 2;
+                var med = sources[medIndex];
+                var compValue = compare.Compare(target, med);
+                if (compValue < 0)
+                {
+                    end = medIndex - 1;
+                }
+                else if (compValue > 0)
+                {
+                    start = medIndex + 1;
+                }
+                else
+                    return medIndex;
+            }
+            return start;
+        }
+
         public static IntBSTNode SortedArray(int[] array)
         {
             var root = ToTree(array,0,array.Length -1);
@@ -65,19 +123,6 @@ namespace DsAndAlg
             return tmpNode;
         }
 
-        public static IntBSTNode Min(IntBSTNode node)
-        {
-            while (node.left != null)
-                node = node.left;
-            return node;
-        }
-
-        public static IntBSTNode Max(IntBSTNode node)
-        {
-            while (node.right != null)
-                node = node.right;
-            return node;
-        }
 
         public static bool VolateRRRule<T>(RBTree<T> tree) where T:IComparable<T>
         {
@@ -133,6 +178,7 @@ namespace DsAndAlg
             Console.WriteLine(sb.ToString());
             return !sameCount;
         }
+    
 
         public static T Min<T>(T node) where T : IBNode<T>
         {
@@ -140,6 +186,7 @@ namespace DsAndAlg
                 node = node.left;
             return node;
         }
+
         public static T Max<T>(T node) where T : IBNode<T>
         {
             while (node.right != null)
@@ -147,7 +194,7 @@ namespace DsAndAlg
             return node;
         }
 
-        private static void Iterate<T>(T p,System.Action<T> func ) where T:IBNode<T>
+        private static void Iterate<T>(T p,System.Action<T> func) where T:IBNode<T>
         {
             Queue<T> queue = new Queue<T>();
             if (p != null)

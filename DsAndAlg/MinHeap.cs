@@ -5,9 +5,7 @@ using System.Runtime.CompilerServices;
 public class MinHeap
 {
     public int[] heapArray {get;private set;}
-
     public int Capacity{get;private set;}
-
     public int current_heap_size {get;private set;}
 
     public MinHeap(int[] data)
